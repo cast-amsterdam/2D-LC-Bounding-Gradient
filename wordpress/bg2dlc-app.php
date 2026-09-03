@@ -2,7 +2,7 @@
 /**
  * Plugin Name: 2D-LC Bounding Gradient
  * Description: Browser-local 2D-LC bounding-gradient analysis for Elementor and WordPress.
- * Version: 1.0.9
+ * Version: 1.0.16
  * Author: 2D-LC Bounding Gradient project
  * License: GPL-2.0-or-later
  */
@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('BG2DLC_VERSION', '1.0.9');
+define('BG2DLC_VERSION', '1.0.16');
 
 function bg2dlc_register_assets() {
     $base = plugin_dir_url(__FILE__) . 'assets/';

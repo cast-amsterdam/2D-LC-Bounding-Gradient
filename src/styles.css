@@ -1,9 +1,31 @@
+.bg2dlc-app,
+[data-bg2dlc-app] {
+  box-sizing: border-box;
+}
+
+/* Break out of narrow WordPress/theme content columns. The shortcode remains
+   centred, but its application surface uses the full browser width. */
+[data-bg2dlc-app] {
+  display: block;
+  width: var(--bg2dlc-viewport-width, 100%) !important;
+  max-width: none !important;
+  margin-inline: calc((100% - var(--bg2dlc-viewport-width, 100%)) / 2) !important;
+}
+
 .bg2dlc-app {
   --bg: #07070d; --panel: #10101a; --panel-2: #171625; --line: #2d2945; --line-strong: #4d4774;
   --text: #f7f5ff; --muted: #aaa6c2; --cyan: #8d7cff; --blue: #38a8ff; --orange: #d21bbe; --red: #ff4f72;
-  box-sizing: border-box; width: 100%; max-width: 1800px; margin: 0 auto; padding: 28px; color: var(--text); background: radial-gradient(circle at 92% 0%,rgba(105,71,232,.16),transparent 31%),radial-gradient(circle at 7% 100%,rgba(210,27,190,.08),transparent 25%),var(--bg);
+  box-sizing: border-box; width: 100%; max-width: none; margin: 0; padding: 28px; color: var(--text); background: radial-gradient(circle at 92% 0%,rgba(105,71,232,.16),transparent 31%),radial-gradient(circle at 7% 100%,rgba(210,27,190,.08),transparent 25%),var(--bg);
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; font-size: 14px; line-height: 1.45;
   border: 1px solid #211d38; border-radius: 12px; box-shadow: 0 24px 80px rgba(0,0,0,.38); color-scheme: dark;
+}
+/* WordPress themes often style bare section/aside elements with large padding
+   or viewport-based minimum heights. Reset those rules inside the app before
+   the component-specific spacing below is applied. */
+.bg2dlc-app :where(section, aside, header, footer, figure) {
+  min-height: 0;
+  margin: 0;
+  padding: 0;
 }
 .bg2dlc-app *, .bg2dlc-app *::before, .bg2dlc-app *::after { box-sizing: border-box; }
 .bg2dlc-app button, .bg2dlc-app input, .bg2dlc-app select { font: inherit; }
@@ -43,8 +65,8 @@
 .bg2dlc-sheet-example figcaption { display: flex; gap: 16px; margin-top: 6px; color: #85809d; font-size: 10px; }
 .bg2dlc-workspace { display: grid; grid-template-columns: minmax(255px, .72fr) minmax(560px, 2fr) minmax(290px, .85fr); gap: 16px; align-items: start; }
 .bg2dlc-controls, .bg2dlc-results, .bg2dlc-main-stage { min-width: 0; }
-.bg2dlc-panel, .bg2dlc-main-stage, .bg2dlc-results { padding: 16px; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); }
-.bg2dlc-controls { display: grid; gap: 16px; }
+.bg2dlc-panel, .bg2dlc-main-stage, .bg2dlc-results { height: auto !important; min-height: 0 !important; margin: 0 !important; padding: 16px !important; border: 1px solid var(--line); border-radius: 9px; background: var(--panel); }
+.bg2dlc-controls { display: grid; height: auto !important; min-height: 0 !important; align-content: start; align-items: start; gap: 16px; }
 .bg2dlc-section-title { display: flex; align-items: flex-start; gap: 10px; min-height: 30px; margin-bottom: 13px; }
 .bg2dlc-section-title > span { display: grid; place-items: center; width: 27px; height: 27px; flex: 0 0 27px; border-radius: 50%; background: rgba(141,124,255,.14); color: #b4a8ff; font-size: 10px; font-weight: 800; }
 .bg2dlc-section-title h2, .bg2dlc-table-card h3, .bg2dlc-chart-heading h3, .bg2dlc-downloads h3 { margin: 0; }
@@ -52,20 +74,25 @@
 .bg2dlc-section-title p { margin: 2px 0 0; color: var(--muted); font-size: 12px; }
 .bg2dlc-dimension { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); }
 .bg2dlc-dimension h3 { margin: 0 0 8px; color: var(--blue); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
+.bg2dlc-hold-settings { margin-top: 4px; padding: 10px 10px 8px; border: 1px solid var(--line); border-radius: 6px; background: rgba(9,8,18,.55); }
+.bg2dlc-hold-settings .bg2dlc-field { grid-template-columns: minmax(0,1fr) 95px; }
+.bg2dlc-hold-settings p { margin: 7px 0 0; color: #8f89aa; font-size: 10px; line-height: 1.4; }
 .bg2dlc-field { display: grid; grid-template-columns: 1fr minmax(95px, .75fr); align-items: center; gap: 9px; margin: 7px 0; color: var(--muted); font-size: 12px; }
 .bg2dlc-field input, .bg2dlc-field select, .bg2dlc-table-card input { width: 100%; min-width: 0; color: var(--text); background: #090812; border: 1px solid var(--line-strong); border-radius: 5px; padding: 7px 8px; }
 .bg2dlc-field input:focus, .bg2dlc-field select:focus, .bg2dlc-table-card input:focus { outline: 2px solid rgba(141,124,255,.36); border-color: var(--cyan); }
-.bg2dlc-table-card { min-width: 0; margin-top: 14px; }
+.bg2dlc-table-card { display: block !important; width: auto; min-width: 0; height: auto !important; min-height: 0 !important; margin: 14px 0 0 !important; padding: 0 !important; }
 .bg2dlc-table-heading, .bg2dlc-chart-heading { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 8px; }
 .bg2dlc-table-card h3, .bg2dlc-chart-heading h3, .bg2dlc-downloads h3 { font-size: 12px; color: #eeebff; }
-.bg2dlc-table-scroll { overflow: auto; max-height: 230px; border: 1px solid var(--line); border-radius: 5px; }
-.bg2dlc-table-card table { width: 100%; border-collapse: collapse; font-size: 11px; font-variant-numeric: tabular-nums; }
-.bg2dlc-table-card th { position: sticky; top: 0; z-index: 1; padding: 7px; text-align: left; color: var(--muted); background: #1a182b; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
-.bg2dlc-table-card td { padding: 5px 7px; border-bottom: 1px solid rgba(77,71,116,.45); text-align: right; }
-.bg2dlc-table-card input { padding: 4px 5px; border-color: transparent; background: transparent; text-align: right; }
+.bg2dlc-table-scroll { width: 100%; height: auto !important; min-height: 0 !important; overflow: auto; max-height: 230px; border: 1px solid var(--line); border-radius: 5px; }
+.bg2dlc-table-card table { width: 100% !important; height: auto !important; min-height: 0 !important; margin: 0 !important; border-spacing: 0 !important; border-collapse: collapse; table-layout: fixed; font-size: 11px; font-variant-numeric: tabular-nums; line-height: 1.25 !important; }
+.bg2dlc-table-card :where(thead, tbody, tr) { height: auto !important; min-height: 0 !important; margin: 0 !important; padding: 0 !important; }
+.bg2dlc-table-card th { position: sticky; top: 0; z-index: 1; height: 30px !important; min-height: 0 !important; padding: 6px 7px !important; line-height: 1.2 !important; text-align: left; color: var(--muted); background: #1a182b; border-bottom: 1px solid var(--line-strong); white-space: nowrap; }
+.bg2dlc-table-card td { height: 34px !important; min-height: 0 !important; padding: 3px 7px !important; line-height: 1.2 !important; border-bottom: 1px solid rgba(77,71,116,.45); text-align: right; vertical-align: middle !important; }
+.bg2dlc-table-card input { display: block !important; width: 100% !important; height: 26px !important; min-height: 0 !important; margin: 0 !important; padding: 3px 5px !important; line-height: 18px !important; border-color: transparent; background: transparent; text-align: right; }
+.bg2dlc-table-card:not(.bg2dlc-result-table) th:last-child, .bg2dlc-table-card:not(.bg2dlc-result-table) td:last-child { width: 32px; padding-inline: 2px !important; text-align: center; }
 .bg2dlc-icon-button { padding: 4px 7px; background: transparent; color: var(--muted); font-size: 10px; white-space: nowrap; }
 .bg2dlc-icon-button:disabled, .bg2dlc-secondary-button:disabled, .bg2dlc-downloads button:disabled { opacity: .38; cursor: default; }
-.bg2dlc-remove { color: var(--muted); background: transparent; border: 0; cursor: pointer; font-size: 16px; }
+.bg2dlc-remove { display: inline-grid !important; place-items: center; width: 24px !important; min-width: 24px !important; max-width: 24px !important; height: 24px !important; min-height: 24px !important; max-height: 24px !important; margin: 0 !important; padding: 0 !important; color: var(--muted); background: transparent; border: 0; border-radius: 3px; cursor: pointer; font-size: 16px; line-height: 1 !important; vertical-align: middle; }
 .bg2dlc-empty-cell { height: 54px; text-align: center !important; color: #716c8c; }
 .bg2dlc-main-stage .bg2dlc-chart-card { margin-top: 4px; }
 .bg2dlc-heatmap { width: 100%; height: clamp(390px, 44vw, 650px); overflow: hidden; border: 1px solid var(--line); border-radius: 6px; background: #090812; }

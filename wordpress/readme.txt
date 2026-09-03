@@ -4,7 +4,7 @@ Tags: chromatography, 2d-lc, scientific, elementor
 Requires at least: 6.3
 Tested up to: 6.8
 Requires PHP: 7.4
-Stable tag: 1.0.9
+Stable tag: 1.0.16
 License: GPLv2 or later
 
 Runs 2D-LC bounding-gradient calculations locally in each visitor's browser. No chromatogram data is uploaded.

@@ -2,6 +2,13 @@ import { createRoot } from "react-dom/client";
 import { App } from "./App";
 import "./styles.css";
 
+function updateViewportWidth() {
+  const width = document.documentElement.clientWidth;
+  document.querySelectorAll<HTMLElement>("[data-bg2dlc-app]").forEach((element) => {
+    element.style.setProperty("--bg2dlc-viewport-width", `${width}px`);
+  });
+}
+
 function mount(element: HTMLElement) {
   if (element.dataset.bg2dlcMounted === "true") return;
   element.dataset.bg2dlcMounted = "true";
@@ -10,6 +17,10 @@ function mount(element: HTMLElement) {
   createRoot(element).render(<App assetBase={element.dataset.assetsBase || "./brand/"} exampleUrl={element.dataset.exampleUrl || "./example/MixTest.xlsx"} limits={{ maxFileMb, maxCells }} />);
 }
 
-function mountAll() { document.querySelectorAll<HTMLElement>("[data-bg2dlc-app]").forEach(mount); }
+function mountAll() {
+  document.querySelectorAll<HTMLElement>("[data-bg2dlc-app]").forEach(mount);
+  updateViewportWidth();
+}
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", mountAll); else mountAll();
 new MutationObserver(mountAll).observe(document.documentElement, { childList: true, subtree: true });
+window.addEventListener("resize", updateViewportWidth, { passive: true });

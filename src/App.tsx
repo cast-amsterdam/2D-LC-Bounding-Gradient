@@ -87,6 +87,10 @@ export function App({ assetBase, exampleUrl, limits }: Props) {
   };
 
   const updateParam = (key: keyof InstrumentParams, value: number) => setAnalysis((current) => ({ ...current, params: { ...current.params, [key]: value } }));
+  const updateHoldTime = (key: "gradient1D" | "gradient2D", value: number) => setAnalysis((current) => ({
+    ...current,
+    [key]: current[key].map((point, index) => index === 1 ? { ...point, time: value } : point),
+  }));
   const changeMethod = (method: AnalysisRequest["method"]) => { setRoi(undefined); setAnalysis((current) => ({ ...current, method })); };
   const changeRoi = (next: Point[], commit: boolean) => {
     setRoi(next); roiRef.current = next;
@@ -162,7 +166,14 @@ export function App({ assetBase, exampleUrl, limits }: Props) {
           <div className="bg2dlc-dimension"><h3>First dimension</h3><NumberField label="Dwell volume (mL)" value={analysis.params.dwell1D} onChange={(value) => updateParam("dwell1D", value)} /><NumberField label="Dead volume (mL)" value={analysis.params.dead1D} onChange={(value) => updateParam("dead1D", value)} /><NumberField label="Flow rate (mL·min⁻¹)" value={analysis.params.flow1D} onChange={(value) => updateParam("flow1D", value)} /></div>
           <div className="bg2dlc-dimension"><h3>Second dimension</h3><NumberField label="Dwell volume (mL)" value={analysis.params.dwell2D} onChange={(value) => updateParam("dwell2D", value)} /><NumberField label="Dead volume (mL)" value={analysis.params.dead2D} onChange={(value) => updateParam("dead2D", value)} /><NumberField label="Flow rate (mL·min⁻¹)" value={analysis.params.flow2D} onChange={(value) => updateParam("flow2D", value)} /></div>
         </section>
-        <section className="bg2dlc-panel"><div className="bg2dlc-section-title"><span>02</span><h2>Scan programs</h2></div><GradientTable title="Scan 1D gradient" points={analysis.gradient1D} onChange={(gradient1D) => setAnalysis((current) => ({ ...current, gradient1D }))} /><GradientTable title="Scan 2D gradient" points={analysis.gradient2D} onChange={(gradient2D) => setAnalysis((current) => ({ ...current, gradient2D }))} /></section>
+        <section className="bg2dlc-panel"><div className="bg2dlc-section-title"><span>02</span><h2>Scan programs</h2></div>
+          <div className="bg2dlc-hold-settings">
+            <NumberField label="1D initial hold time (min)" value={analysis.gradient1D[1].time} onChange={(value) => updateHoldTime("gradient1D", value)} />
+            <NumberField label="2D initial hold time (min)" value={analysis.gradient2D[1].time} onChange={(value) => updateHoldTime("gradient2D", value)} />
+            <p>These settings are synchronized with the second time row in each scan program. The 2D value defaults to 0.16 min and is an input, not a calculated value.</p>
+          </div>
+          <GradientTable title="Scan 1D gradient" points={analysis.gradient1D} onChange={(gradient1D) => setAnalysis((current) => ({ ...current, gradient1D }))} /><GradientTable title="Scan 2D gradient" points={analysis.gradient2D} onChange={(gradient2D) => setAnalysis((current) => ({ ...current, gradient2D }))} />
+        </section>
       </aside>
 
       <section className="bg2dlc-main-stage">

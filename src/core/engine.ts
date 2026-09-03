@@ -138,7 +138,7 @@ function phi2(request: AnalysisRequest, maxTime: number, time: number) {
   return sampleTime > 0 ? interpLinear(gradientWithEnd(request.gradient2D, maxTime), sampleTime) : request.gradient2D[0].phi;
 }
 
-function optimizeGradient(
+export function optimizeGradient(
   points: GradientPoint[],
   optimum: number[],
   maxTime: number,
@@ -149,10 +149,40 @@ function optimizeGradient(
   const extended = gradientWithEnd(points, maxTime);
   let times = uniqueSorted([...extended.filter((point) => point.time < Math.max(...opt)).map((point) => point.time), ...opt]);
   while (times.length > 2 && points.length > 1 && times.slice(1).some((time) => time < points[1].time)) times.splice(1, 1);
-  const phis = times.map((time) => phiAt(time + offset));
+  let phis = times.map((time) => phiAt(time + offset));
   const max = Math.max(...times);
   if (max > 0 && times.length >= 3) {
-    if (times.length === 4 && phis[2] === phis[3] && phis[0] === phis[1]) {
+    if (points.length > 3) {
+      // Multi-step scan programs are a web-app extension. If the useful ROI
+      // starts partway through the scan gradient, begin just after the initial
+      // hold at the composition on the ROI's left edge. Otherwise retain all
+      // intermediate breakpoints later in the program. The fixed three-row
+      // MATLAB behavior below remains untouched.
+      const holdEnd = points[1].time;
+      const sourceEnd = Math.max(...opt);
+      const sourceStart = Math.min(sourceEnd, Math.max(holdEnd, Math.min(...opt)));
+      const holdPhi = phiAt(holdEnd + offset);
+      const startPhi = phiAt(sourceStart + offset);
+      const needsStartingStep = sourceStart > holdEnd && Math.abs(startPhi - holdPhi) > 1e-10;
+      const targetStart = needsStartingStep ? Math.min(maxTime, holdEnd + 0.01) : holdEnd;
+      const sourceTimes = uniqueSorted([
+        points[0].time,
+        holdEnd,
+        ...(needsStartingStep ? [sourceStart] : []),
+        ...extended.filter((point) => point.time > sourceStart && point.time < sourceEnd).map((point) => point.time),
+        sourceEnd,
+      ]);
+      phis = sourceTimes.map((time) => phiAt(time + offset));
+      times = sourceTimes.map((time) => {
+        if (time <= holdEnd) return time;
+        if (sourceEnd <= sourceStart) return targetStart;
+        return targetStart + ((time - sourceStart) / (sourceEnd - sourceStart)) * (maxTime - targetStart);
+      });
+      if (needsStartingStep) {
+        const startIndex = sourceTimes.indexOf(sourceStart);
+        if (startIndex >= 0) times[startIndex] = targetStart;
+      }
+    } else if (times.length === 4 && phis[2] === phis[3] && phis[0] === phis[1]) {
       for (let i = 2; i < times.length; i += 1) times[i] = (times[i] / max) * maxTime;
     } else if (times.length > 3 && (phis[phis.length - 2] < phis[phis.length - 1] || phis[2] > phis[1])) {
       const pivot = times[2];
