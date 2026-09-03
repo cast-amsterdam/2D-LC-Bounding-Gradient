@@ -1,0 +1,9 @@
+This project bundles the following open-source components:
+
+React and React DOM — MIT License — https://react.dev/
+SheetJS Community Edition — Apache License 2.0 — https://sheetjs.com/
+Delaunator — ISC License — https://github.com/mapbox/delaunator
+
+Their license texts and source are available from the linked upstream projects and the package lock/source tree.
+
+Institutional names and logo assets may be subject to separate trademark and brand-use requirements.
