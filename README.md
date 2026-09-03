@@ -118,25 +118,6 @@ For GitHub, the executable is best published as a GitHub Release asset. The incl
 
 The locally generated executable is not digitally signed. Windows may therefore show an “Unknown publisher” or SmartScreen warning. For public distribution, sign the final executable with an Authenticode certificate before attaching it to a GitHub Release.
 
-## WordPress and Elementor
-
-1. Build the project or use `release/bg2dlc-app.zip`.
-2. In WordPress, choose **Plugins → Add New → Upload Plugin**.
-3. Upload the ZIP and activate **2D-LC Bounding Gradient**.
-4. Add an Elementor **Shortcode** widget containing:
-
-```text
-[bg2dlc_app]
-```
-
-Optional administrator-controlled limits:
-
-```text
-[bg2dlc_app max_file_mb="50" max_cells="2000000"]
-```
-
-Plugin assets are enqueued only when the shortcode is rendered. Calculations never silently downsample scientific data; only heatmap display data may be peak-preserving downsampled.
-
 ## Repository structure
 
 ```text
